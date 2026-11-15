@@ -47,7 +47,7 @@ class Product extends Model
                 return $primary->image_path;
             }
 
-            return asset('storage/'.$primary->image_path);
+            return asset('images/'.$primary->image_path);
         }
 
         return asset('images/default-food.png');
