@@ -1,15 +1,15 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\ProductionRecapController;
-use App\Http\Controllers\Admin\QrisController;
-use App\Http\Controllers\Admin\RawMaterialController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\SalesRecapController;
-use App\Http\Controllers\CustomerController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\RawMaterialController;
+use App\Http\Controllers\Admin\QrisController;
+use App\Http\Controllers\Admin\ProductionRecapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +34,34 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('qris', [QrisController::class, 'index'])->name('qris.index');
         Route::post('qris', [QrisController::class, 'store'])->name('qris.store');
-        Route::get('production', [ProductionRecapController::class, 'index'])->name('production.index');
+        Route::get('production-recap', [ProductionRecapController::class, 'index'])->name('production.index');
+
+        // SEMENTARA: cek konfigurasi storage di server. Hapus setelah masalah upload selesai.
+        Route::get('cek-storage', function () {
+            $disk = config('filesystems.media_disk', 'public');
+
+            try {
+                \Illuminate\Support\Facades\Storage::disk($disk)->put('tes-vercel.txt', 'halo '.now());
+                $tesTulis = 'BERHASIL';
+            } catch (\Throwable $e) {
+                $prev = $e->getPrevious();
+                $tesTulis = 'GAGAL: '.$e->getMessage()
+                    .($prev ? ' — '.get_class($prev).': '.$prev->getMessage() : '');
+            }
+
+            return [
+                'driver_public' => config('filesystems.disks.public.driver'),
+                'media_disk' => $disk,
+                'driver_media' => config("filesystems.disks.{$disk}.driver"),
+                'bucket_ada' => filled(config('filesystems.disks.s3.bucket')),
+                'key_ada' => filled(config('filesystems.disks.s3.key')),
+                'secret_ada' => filled(config('filesystems.disks.s3.secret')),
+                'endpoint' => config('filesystems.disks.s3.endpoint'),
+                'region' => config('filesystems.disks.s3.region'),
+                'url' => config('filesystems.disks.s3.url'),
+                'tes_tulis' => $tesTulis,
+            ];
+        })->name('cek-storage');
 
         // CRUD Products & Multi-images
         Route::resource('products', ProductController::class);
