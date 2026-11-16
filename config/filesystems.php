@@ -1,5 +1,9 @@
 <?php
 
+// S3 hanya dipakai bila bucket DAN key/secret terisi. Tanpa key, AWS SDK mencari
+// kredensial ke metadata server EC2 dan menggantung sampai timeout 30 detik.
+$useS3 = env('AWS_BUCKET') && env('AWS_ACCESS_KEY_ID') && env('AWS_SECRET_ACCESS_KEY');
+
 $s3Disk = [
     'driver' => 's3',
     'key' => env('AWS_ACCESS_KEY_ID'),
@@ -56,7 +60,7 @@ return [
 
         // Bila AWS_BUCKET diisi, disk "public" ikut memakai Supabase Storage (S3),
         // supaya kode lama yang memakai disk('public') tetap tersimpan ke Supabase.
-        'public' => env('AWS_BUCKET')
+        'public' => $useS3
             ? $s3Disk
             : [
                 'driver' => 'local',
