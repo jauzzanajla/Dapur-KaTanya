@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -85,7 +86,20 @@ class ProductController extends Controller
             $uploadedFiles = $request->file('images');
             foreach ($uploadedFiles as $index => $file) {
                 $filename = 'prod_'.$product->id.'_'.time().'_'.Str::random(6).'.'.$file->getClientOriginalExtension();
-                $path = $file->storeAs('products', $filename, 'public');
+                try {
+                    $path = $file->storeAs('products', $filename, 'public');
+                } catch (\Throwable $exception) {
+                    Log::warning('Product image upload failed.', [
+                        'product_id' => $product->id,
+                        'exception' => $exception->getMessage(),
+                    ]);
+
+                    return back()->withInput()->with('error', 'Gambar produk gagal diunggah ke storage. Periksa konfigurasi storage lalu coba kembali.');
+                }
+
+                if (! $path) {
+                    return back()->withInput()->with('error', 'Gambar produk gagal diunggah ke storage. Periksa konfigurasi storage lalu coba kembali.');
+                }
 
                 ProductImage::create([
                     'product_id' => $product->id,
@@ -143,7 +157,20 @@ class ProductController extends Controller
 
             foreach ($request->file('new_images') as $index => $file) {
                 $filename = 'prod_'.$product->id.'_'.time().'_'.Str::random(6).'.'.$file->getClientOriginalExtension();
-                $path = $file->storeAs('products', $filename, 'public');
+                try {
+                    $path = $file->storeAs('products', $filename, 'public');
+                } catch (\Throwable $exception) {
+                    Log::warning('Additional product image upload failed.', [
+                        'product_id' => $product->id,
+                        'exception' => $exception->getMessage(),
+                    ]);
+
+                    return back()->withInput()->with('error', 'Gambar tambahan gagal diunggah ke storage. Periksa konfigurasi storage lalu coba kembali.');
+                }
+
+                if (! $path) {
+                    return back()->withInput()->with('error', 'Gambar tambahan gagal diunggah ke storage. Periksa konfigurasi storage lalu coba kembali.');
+                }
 
                 $lastSort++;
                 ProductImage::create([
@@ -165,8 +192,17 @@ class ProductController extends Controller
         $wasPrimary = $image->is_primary;
 
         // Delete file from disk if stored locally
-        if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
-            Storage::disk('public')->delete($image->image_path);
+        if ($image->image_path) {
+            try {
+                if (Storage::disk('public')->exists($image->image_path)) {
+                    Storage::disk('public')->delete($image->image_path);
+                }
+            } catch (\Throwable $exception) {
+                Log::warning('Product image file could not be deleted.', [
+                    'path' => $image->image_path,
+                    'exception' => $exception->getMessage(),
+                ]);
+            }
         }
 
         $image->delete();
@@ -195,8 +231,17 @@ class ProductController extends Controller
         $name = $product->name;
         // Delete images
         foreach ($product->images as $img) {
-            if ($img->image_path && Storage::disk('public')->exists($img->image_path)) {
-                Storage::disk('public')->delete($img->image_path);
+            if ($img->image_path) {
+                try {
+                    if (Storage::disk('public')->exists($img->image_path)) {
+                        Storage::disk('public')->delete($img->image_path);
+                    }
+                } catch (\Throwable $exception) {
+                    Log::warning('Product image file could not be deleted during product removal.', [
+                        'path' => $img->image_path,
+                        'exception' => $exception->getMessage(),
+                    ]);
+                }
             }
             $img->delete();
         }

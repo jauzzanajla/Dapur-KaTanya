@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -30,7 +31,13 @@ class QrisController extends Controller
 
         $file = $request->file('qris_image');
         $filename = 'qris-pembayaran.'.$file->extension();
-        $path = $file->storeAs('', $filename, 'public');
+        try {
+            $path = $file->storeAs('', $filename, 'public');
+        } catch (\Throwable $exception) {
+            Log::warning('QRIS upload failed.', ['exception' => $exception->getMessage()]);
+
+            return back()->with('error', 'Gambar QRIS gagal diunggah ke storage. Periksa konfigurasi storage lalu coba kembali.');
+        }
 
         if (! $path) {
             return back()->with('error', 'Gambar QRIS gagal disimpan. Silakan coba kembali.');
@@ -39,7 +46,14 @@ class QrisController extends Controller
         foreach (['png', 'jpg', 'jpeg'] as $extension) {
             $oldPath = "qris-pembayaran.{$extension}";
             if ($oldPath !== $path) {
-                Storage::disk('public')->delete($oldPath);
+                try {
+                    Storage::disk('public')->delete($oldPath);
+                } catch (\Throwable $exception) {
+                    Log::warning('Old QRIS file could not be deleted.', [
+                        'path' => $oldPath,
+                        'exception' => $exception->getMessage(),
+                    ]);
+                }
             }
         }
 
@@ -50,8 +64,17 @@ class QrisController extends Controller
     {
         foreach (['png', 'jpg', 'jpeg'] as $extension) {
             $path = "qris-pembayaran.{$extension}";
-            if (Storage::disk('public')->exists($path)) {
-                return $path;
+            try {
+                if (Storage::disk('public')->exists($path)) {
+                    return $path;
+                }
+            } catch (\Throwable $exception) {
+                Log::warning('QRIS storage lookup failed in the admin page.', [
+                    'path' => $path,
+                    'exception' => $exception->getMessage(),
+                ]);
+
+                return null;
             }
         }
 

@@ -8,6 +8,7 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -42,9 +43,16 @@ class CustomerController extends Controller
             ->where('is_featured', true)
             ->first();
 
-        $qrisPath = collect(['png', 'jpg', 'jpeg'])
-            ->map(fn (string $extension): string => "qris-pembayaran.{$extension}")
-            ->first(fn (string $path): bool => Storage::disk('public')->exists($path));
+        $qrisPath = null;
+        try {
+            $qrisPath = collect(['png', 'jpg', 'jpeg'])
+                ->map(fn (string $extension): string => "qris-pembayaran.{$extension}")
+                ->first(fn (string $path): bool => Storage::disk('public')->exists($path));
+        } catch (\Throwable $exception) {
+            Log::warning('QRIS storage lookup failed while loading the customer catalog.', [
+                'exception' => $exception->getMessage(),
+            ]);
+        }
 
         return view('customer.catalog', compact('products', 'category', 'search', 'qrisPath', 'featuredProduct'));
     }
