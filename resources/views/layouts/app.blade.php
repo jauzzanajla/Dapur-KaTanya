@@ -60,7 +60,7 @@
 
     <!-- Announcement Bar -->
     <div class="bg-gradient-to-r from-red-600 via-orange-500 to-red-600 text-white text-xs font-semibold py-2 px-4 text-center tracking-wide">
-        🧀 Buka Setiap Hari! Nikmati Sensasi Gurih Lumer Dimsum & Cireng Kuah Keju Dapur KaTanya. Pembayaran Mudah via QRIS! 🧀
+
     </div>
 
     <!-- Header Navbar -->
@@ -183,8 +183,8 @@
                     <h4 class="text-sm font-bold uppercase tracking-wider text-orange-400">Lokasi & Pengambilan</h4>
                     <p class="text-slate-300 text-sm">
                         <strong>Outlet Dapur KaTanya</strong><br>
-                        Jl. Kampus Raya No. 12 (Dekat Gerbang Utama Kampus)<br>
-                        Kota Pelajar, Indonesia
+                        Jl. Minangkabau No 50 (Telkom University Jakarta, Kampus C Minangkabau)<br>
+                        Kota Jakarta Selatan
                     </p>
                     <p class="text-xs text-slate-400">
                         <i data-lucide="clock" class="w-3.5 h-3.5 inline mr-1 text-orange-400"></i>
@@ -390,17 +390,25 @@
                                         </p>
                                     </div>
 
-                                    <!-- Pickup Date (Date Picker) (FEATURE 5) -->
+                                    <!-- Pickup Date (Open PO Schedule) -->
                                     <div>
                                         <label class="block text-xs font-bold text-slate-700 mb-1">
-                                            Tanggal Pengambilan Pesanan (Date Picker) <span class="text-red-500">*</span>
+                                            Jadwal Tanggal Pengambilan <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="date"
-                                               x-model="pickupDate"
-                                               name="pickup_date"
-                                               min="{{ date('Y-m-d') }}"
-                                               required
-                                               class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white">
+                                        <select id="pickup_date" x-model="pickupDate" name="pickup_date" required @disabled($pickupSchedules->isEmpty())
+                                                class="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:bg-slate-100">
+                                            <option value="" disabled>Pilih jadwal batch pickup</option>
+                                            @foreach($pickupSchedules as $schedule)
+                                                <option value="{{ $schedule->pickup_date->toDateString() }}">
+                                                    {{ $schedule->pickup_date->locale('id')->translatedFormat('l, d F Y') }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @if($pickupSchedules->isEmpty())
+                                            <p class="mt-1 text-[11px] font-semibold text-red-600">Belum ada jadwal Open PO aktif. Silakan cek kembali setelah admin membuka batch.</p>
+                                        @else
+                                            <p class="mt-1 text-[11px] text-slate-500">Tanggal di atas adalah jadwal batch produksi yang telah ditentukan.</p>
+                                        @endif
                                     </div>
 
                                     <!-- Pickup Location (Lokasi Pengambilan) -->
@@ -538,15 +546,19 @@
                         <div x-show="checkoutStep === 1">
                             <button type="button"
                                     @click="goToPaymentStep()"
-                                    :disabled="cart.length === 0 || !customerPhone || customerPhone.trim().length < 10"
+                                    :disabled="cart.length === 0 || !customerPhone || customerPhone.trim().length < 10 || !pickupDate"
                                     class="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95"
-                                    :class="(cart.length > 0 && customerPhone && customerPhone.trim().length >= 10)
+                                    :class="(cart.length > 0 && customerPhone && customerPhone.trim().length >= 10 && pickupDate)
                                             ? 'bg-red-600 hover:bg-red-700 shadow-red-600/30'
                                             : 'bg-slate-300 cursor-not-allowed'">
                                 <span>Lanjut ke Pembayaran QRIS</span>
                                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
                             </button>
-                            <p x-show="!customerPhone || customerPhone.trim().length < 10"
+                            <p x-show="!pickupDate"
+                               class="text-[11px] text-orange-700 text-center mt-1.5 font-semibold">
+                                * Pilih jadwal pickup Open PO untuk melanjutkan.
+                            </p>
+                            <p x-show="customerPhone && customerPhone.trim().length < 10"
                                class="text-[11px] text-red-600 text-center mt-1.5 font-semibold">
                                 * Isi Nomor HP Asli terlebih dahulu untuk mengaktifkan tombol lanjut.
                             </p>
@@ -649,7 +661,7 @@
                 cart: [],
                 customerName: '',
                 customerPhone: '',
-                pickupDate: '{{ date("Y-m-d") }}',
+                pickupDate: @js(old('pickup_date', '')),
                 pickupTime: '12:30',
                 pickupLocation: 'Kampus B',
                 otherPickupLocation: '',
@@ -734,7 +746,8 @@
                     return this.cart.length > 0 &&
                            this.customerPhone &&
                            this.customerPhone.trim().length >= 10 &&
-                           this.customerName.trim().length > 0;
+                           this.customerName.trim().length > 0 &&
+                           this.pickupDate;
                 },
 
                 goToPaymentStep() {
@@ -744,6 +757,10 @@
                     }
                     if (!this.customerPhone || this.customerPhone.trim().length < 10) {
                         alert('Nomor HP Asli WAJIB diisi minimal 10 digit angka!');
+                        return;
+                    }
+                    if (!this.pickupDate) {
+                        alert('Silakan pilih jadwal tanggal pickup Open PO terlebih dahulu.');
                         return;
                     }
                     this.checkoutStep = 2;

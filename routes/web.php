@@ -1,15 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController;
-use App\Http\Controllers\Admin\SalesRecapController;
-use App\Http\Controllers\Admin\RawMaterialController;
-use App\Http\Controllers\Admin\QrisController;
+use App\Http\Controllers\Admin\PickupScheduleController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductionRecapController;
+use App\Http\Controllers\Admin\QrisController;
+use App\Http\Controllers\Admin\RawMaterialController;
+use App\Http\Controllers\Admin\SalesRecapController;
+use App\Http\Controllers\CustomerController;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,15 +37,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('qris', [QrisController::class, 'index'])->name('qris.index');
         Route::post('qris', [QrisController::class, 'store'])->name('qris.store');
         Route::get('production-recap', [ProductionRecapController::class, 'index'])->name('production.index');
+        Route::get('pickup-schedules', [PickupScheduleController::class, 'index'])->name('pickup-schedules.index');
+        Route::post('pickup-schedules', [PickupScheduleController::class, 'store'])->name('pickup-schedules.store');
+        Route::put('pickup-schedules/{pickupSchedule}', [PickupScheduleController::class, 'update'])->name('pickup-schedules.update');
+        Route::delete('pickup-schedules/{pickupSchedule}', [PickupScheduleController::class, 'destroy'])->name('pickup-schedules.destroy');
 
         // SEMENTARA: cek konfigurasi storage di server. Hapus setelah masalah upload selesai.
         Route::get('cek-storage', function () {
             $disk = config('filesystems.media_disk', 'public');
 
             try {
-                \Illuminate\Support\Facades\Storage::disk($disk)->put('tes-vercel.txt', 'halo '.now());
+                Storage::disk($disk)->put('tes-vercel.txt', 'halo '.now());
                 $tesTulis = 'BERHASIL';
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $prev = $e->getPrevious();
                 $tesTulis = 'GAGAL: '.$e->getMessage()
                     .($prev ? ' — '.get_class($prev).': '.$prev->getMessage() : '');

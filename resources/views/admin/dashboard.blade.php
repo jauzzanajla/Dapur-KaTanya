@@ -41,6 +41,11 @@
                 <i data-lucide="clipboard-list" class="w-4 h-4"></i>
                 <span>Rekap Produksi / Kebutuhan Bahan</span>
             </a>
+            <a href="{{ route('admin.pickup-schedules.index') }}"
+               class="px-4 py-2.5 bg-white text-red-700 hover:bg-red-50 font-bold text-xs rounded-xl border border-red-100 transition active:scale-95 flex items-center gap-2">
+                <i data-lucide="calendar-days" class="w-4 h-4"></i>
+                <span>Jadwal Pickup / Open PO</span>
+            </a>
         </div>
     </div>
 

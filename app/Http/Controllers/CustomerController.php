@@ -4,20 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\PickupSchedule;
 use App\Models\Product;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class CustomerController extends Controller
 {
     /**
      * Display product catalog for customers.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $category = $request->query('category');
         $search = $request->query('search');
@@ -42,6 +47,7 @@ class CustomerController extends Controller
             ->where('is_active', true)
             ->where('is_featured', true)
             ->first();
+        $pickupSchedules = $this->activePickupSchedules();
 
         $qrisPath = null;
         $publicDisk = config('filesystems.disks.public', []);
@@ -59,13 +65,13 @@ class CustomerController extends Controller
             }
         }
 
-        return view('customer.catalog', compact('products', 'category', 'search', 'qrisPath', 'featuredProduct'));
+        return view('customer.catalog', compact('products', 'category', 'search', 'qrisPath', 'featuredProduct', 'pickupSchedules'));
     }
 
     /**
      * Store a new customer order.
      */
-    public function storeOrder(Request $request)
+    public function storeOrder(Request $request): RedirectResponse
     {
         $request->validate([
             'customer_name' => 'required|string|max:100',
@@ -76,7 +82,12 @@ class CustomerController extends Controller
                 'max:20',
                 'regex:/^(\+62|62|0)[0-9]{9,15}$/',
             ],
-            'pickup_date' => 'required|date|after_or_equal:today',
+            'pickup_date' => [
+                'required',
+                'date_format:Y-m-d',
+                'after_or_equal:'.now('Asia/Jakarta')->toDateString(),
+                Rule::exists('pickup_schedules', 'pickup_date')->where('is_active', true),
+            ],
             'pickup_time' => 'nullable|string|max:50',
             'pickup_location' => 'required|in:Kampus B,Kampus C,Lainnya',
             'pickup_location_other' => 'required_if:pickup_location,Lainnya|nullable|string|max:150',
@@ -88,6 +99,7 @@ class CustomerController extends Controller
             'customer_phone.regex' => 'Format nomor HP tidak valid. Masukkan nomor HP aktif (misal: 08123456789).',
             'pickup_date.required' => 'Tanggal pengambilan pesanan (Pickup) wajib dipilih.',
             'pickup_date.after_or_equal' => 'Tanggal pickup tidak boleh tanggal yang sudah lewat.',
+            'pickup_date.exists' => 'Tanggal pickup sudah tidak tersedia. Silakan pilih jadwal PO yang masih aktif.',
             'pickup_location.required' => 'Lokasi pengambilan (Pickup) wajib dipilih.',
             'pickup_location.in' => 'Pilih Kampus B, Kampus C, atau opsi lainnya.',
             'pickup_location_other.required_if' => 'Tuliskan lokasi pickup jika memilih Lainnya.',
@@ -197,17 +209,18 @@ class CustomerController extends Controller
     /**
      * Show order confirmation & status details.
      */
-    public function showOrder($order_number)
+    public function showOrder(string $orderNumber): View
     {
-        $order = Order::with('items')->where('order_number', $order_number)->firstOrFail();
+        $order = Order::with('items')->where('order_number', $orderNumber)->firstOrFail();
+        $pickupSchedules = $this->activePickupSchedules();
 
-        return view('customer.order-detail', compact('order'));
+        return view('customer.order-detail', compact('order', 'pickupSchedules'));
     }
 
     /**
      * Search and track order by phone number or order number.
      */
-    public function trackOrder(Request $request)
+    public function trackOrder(Request $request): View
     {
         $query = $request->query('q');
         $orders = collect();
@@ -220,6 +233,20 @@ class CustomerController extends Controller
                 ->get();
         }
 
-        return view('customer.track-order', compact('orders', 'query'));
+        $pickupSchedules = $this->activePickupSchedules();
+
+        return view('customer.track-order', compact('orders', 'query', 'pickupSchedules'));
+    }
+
+    /**
+     * @return Collection<int, PickupSchedule>
+     */
+    private function activePickupSchedules(): Collection
+    {
+        return PickupSchedule::query()
+            ->where('is_active', true)
+            ->where('pickup_date', '>=', now('Asia/Jakarta')->toDateString())
+            ->orderBy('pickup_date')
+            ->get();
     }
 }
