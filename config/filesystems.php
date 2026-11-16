@@ -1,13 +1,19 @@
 <?php
 
+// Vercel MEMBLOKIR nama env AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY (nama cadangan
+// sistem), jadi di Vercel key disimpan sebagai SUPABASE_S3_KEY & SUPABASE_S3_SECRET.
+// Di lokal, AWS_* tetap dipakai sebagai cadangan.
+$s3Key = env('SUPABASE_S3_KEY') ?: env('AWS_ACCESS_KEY_ID');
+$s3Secret = env('SUPABASE_S3_SECRET') ?: env('AWS_SECRET_ACCESS_KEY');
+
 // S3 hanya dipakai bila bucket DAN key/secret terisi. Tanpa key, AWS SDK mencari
-// kredensial ke metadata server EC2 dan menggantung sampai timeout 30 detik.
-$useS3 = env('AWS_BUCKET') && env('AWS_ACCESS_KEY_ID') && env('AWS_SECRET_ACCESS_KEY');
+// kredensial ke metadata server EC2 dan menggantung sampai timeout.
+$useS3 = env('AWS_BUCKET') && $s3Key && $s3Secret;
 
 $s3Disk = [
     'driver' => 's3',
-    'key' => env('AWS_ACCESS_KEY_ID'),
-    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+    'key' => $s3Key,
+    'secret' => $s3Secret,
     'region' => env('AWS_DEFAULT_REGION'),
     'bucket' => env('AWS_BUCKET'),
     'url' => env('AWS_URL'),
