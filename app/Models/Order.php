@@ -46,7 +46,7 @@ class Order extends Model
         if (str_starts_with($this->payment_proof, 'http')) {
             return $this->payment_proof;
         }
-        return asset('storage/' . $this->payment_proof);
+        return \App\Support\Media::url($this->payment_proof);
     }
 
     public function getStatusBadgeAttribute(): array

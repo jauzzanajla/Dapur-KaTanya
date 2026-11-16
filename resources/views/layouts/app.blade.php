@@ -474,7 +474,7 @@
                             <!-- QRIS Image from Admin Settings -->
                             <div class="bg-white border-2 border-orange-200 rounded-2xl p-4 text-center shadow-sm space-y-3">
                                 @if(isset($qrisPath) && $qrisPath)
-                                    <img src="{{ asset('storage/' . $qrisPath) }}"
+                                    <img src="{{ \App\Support\Media::url($qrisPath) }}"
                                          alt="QRIS Dapur KaTanya"
                                          class="max-w-[260px] max-h-72 object-contain mx-auto rounded-xl border border-slate-100 shadow">
                                     <p class="text-[11px] text-slate-500">

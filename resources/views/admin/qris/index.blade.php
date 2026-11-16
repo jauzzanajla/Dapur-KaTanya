@@ -48,7 +48,7 @@
 
             @if($qrisPath)
                 <div class="min-h-64 rounded-2xl border border-slate-200 bg-slate-50 p-4 flex items-center justify-center">
-                    <img src="{{ asset('storage/' . $qrisPath) }}" alt="QRIS Pembayaran Dapur KaTanya" class="max-h-72 max-w-full object-contain rounded-xl">
+                    <img src="{{ \App\Support\Media::url($qrisPath) }}" alt="QRIS Pembayaran Dapur KaTanya" class="max-h-72 max-w-full object-contain rounded-xl">
                 </div>
                 <p class="text-[11px] text-emerald-700 font-bold flex items-center gap-2">
                     <i data-lucide="circle-check" class="w-4 h-4"></i>
