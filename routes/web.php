@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\SalesRecapController;
 use App\Http\Controllers\Admin\RawMaterialController;
 use App\Http\Controllers\Admin\QrisController;
-use App\Http\Controllers\Admin\ProductionRecapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +33,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('qris', [QrisController::class, 'index'])->name('qris.index');
         Route::post('qris', [QrisController::class, 'store'])->name('qris.store');
-        Route::get('production-recap', [ProductionRecapController::class, 'index'])->name('production.index');
+
+        // SEMENTARA: cek konfigurasi storage di server. Hapus setelah masalah upload selesai.
+        Route::get('cek-storage', function () {
+            return [
+                'driver_public' => config('filesystems.disks.public.driver'),
+                'bucket_ada' => filled(config('filesystems.disks.s3.bucket')),
+                'key_ada' => filled(config('filesystems.disks.s3.key')),
+                'secret_ada' => filled(config('filesystems.disks.s3.secret')),
+                'url' => config('filesystems.disks.s3.url'),
+                'media_disk' => config('filesystems.media_disk'),
+            ];
+        })->name('cek-storage');
 
         // CRUD Products & Multi-images
         Route::resource('products', ProductController::class);
