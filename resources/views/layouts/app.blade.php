@@ -69,8 +69,8 @@
             <div class="flex items-center justify-between h-20">
                 <!-- Brand Logo -->
                 <a href="{{ route('catalog') }}" class="flex items-center gap-3 group">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-red-600 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-red-500/20 group-hover:scale-105 transition-transform">
-                        <span class="font-black text-2xl tracking-tighter">DK</span>
+                    <div class="w-16 h-12 shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform">
+                        <img src="{{ asset('images/dapur-katanya-logo.png') }}" alt="Logo Dapur KaTanya" class="w-full h-full object-contain">
                     </div>
                     <div>
                         <span class="text-2xl font-black tracking-tight text-slate-900 group-hover:text-red-600 transition-colors">
@@ -164,8 +164,8 @@
                 <!-- Col 1: Brand -->
                 <div class="md:col-span-2 space-y-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-orange-500 flex items-center justify-center text-white font-black text-xl">
-                            DK
+                        <div class="w-16 h-12 shrink-0 flex items-center justify-center">
+                            <img src="{{ asset('images/dapur-katanya-logo.png') }}" alt="Logo Dapur KaTanya" class="w-full h-full object-contain">
                         </div>
                         <span class="text-2xl font-black tracking-tight">Dapur <span class="text-red-500">KaTanya</span></span>
                     </div>
