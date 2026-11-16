@@ -72,8 +72,8 @@
             <!-- Sidebar Header / Brand -->
             <div class="h-20 px-6 border-b border-slate-100 flex items-center justify-between">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-red-600 to-orange-500 flex items-center justify-center text-white font-black text-xl shadow-md shadow-red-500/20">
-                        DK
+                    <div class="w-16 h-12 shrink-0 flex items-center justify-center">
+                        <img src="{{ asset('images/dapur-katanya-logo.png') }}" alt="Logo Dapur KaTanya" class="w-full h-full object-contain">
                     </div>
                     <div>
                         <span class="text-lg font-black tracking-tight text-slate-900">

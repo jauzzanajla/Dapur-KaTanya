@@ -1,14 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController;
-use App\Http\Controllers\Admin\SalesRecapController;
-use App\Http\Controllers\Admin\RawMaterialController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductionRecapController;
 use App\Http\Controllers\Admin\QrisController;
+use App\Http\Controllers\Admin\RawMaterialController;
+use App\Http\Controllers\Admin\SalesRecapController;
+use App\Http\Controllers\CustomerController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,18 +34,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('qris', [QrisController::class, 'index'])->name('qris.index');
         Route::post('qris', [QrisController::class, 'store'])->name('qris.store');
-
-        // SEMENTARA: cek konfigurasi storage di server. Hapus setelah masalah upload selesai.
-        Route::get('cek-storage', function () {
-            return [
-                'driver_public' => config('filesystems.disks.public.driver'),
-                'bucket_ada' => filled(config('filesystems.disks.s3.bucket')),
-                'key_ada' => filled(config('filesystems.disks.s3.key')),
-                'secret_ada' => filled(config('filesystems.disks.s3.secret')),
-                'url' => config('filesystems.disks.s3.url'),
-                'media_disk' => config('filesystems.media_disk'),
-            ];
-        })->name('cek-storage');
+        Route::get('production', [ProductionRecapController::class, 'index'])->name('production.index');
 
         // CRUD Products & Multi-images
         Route::resource('products', ProductController::class);
