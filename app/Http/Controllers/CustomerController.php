@@ -44,14 +44,19 @@ class CustomerController extends Controller
             ->first();
 
         $qrisPath = null;
-        try {
-            $qrisPath = collect(['png', 'jpg', 'jpeg'])
-                ->map(fn (string $extension): string => "qris-pembayaran.{$extension}")
-                ->first(fn (string $path): bool => Storage::disk('public')->exists($path));
-        } catch (\Throwable $exception) {
-            Log::warning('QRIS storage lookup failed while loading the customer catalog.', [
-                'exception' => $exception->getMessage(),
-            ]);
+        $publicDisk = config('filesystems.disks.public', []);
+        if (($publicDisk['driver'] ?? null) === 's3' && (empty($publicDisk['key']) || empty($publicDisk['secret']))) {
+            Log::warning('QRIS lookup skipped because S3 credentials are not configured.');
+        } else {
+            try {
+                $qrisPath = collect(['png', 'jpg', 'jpeg'])
+                    ->map(fn (string $extension): string => "qris-pembayaran.{$extension}")
+                    ->first(fn (string $path): bool => Storage::disk('public')->exists($path));
+            } catch (\Throwable $exception) {
+                Log::warning('QRIS storage lookup failed while loading the customer catalog.', [
+                    'exception' => $exception->getMessage(),
+                ]);
+            }
         }
 
         return view('customer.catalog', compact('products', 'category', 'search', 'qrisPath', 'featuredProduct'));

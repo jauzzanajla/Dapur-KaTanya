@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Support\Media;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Log;
 
 class Order extends Model
 {
@@ -40,13 +42,22 @@ class Order extends Model
 
     public function getPaymentProofUrlAttribute(): ?string
     {
-        if (!$this->payment_proof) {
+        if (! $this->payment_proof) {
             return null;
         }
         if (str_starts_with($this->payment_proof, 'http')) {
             return $this->payment_proof;
         }
-        return \App\Support\Media::url($this->payment_proof);
+        try {
+            return Media::url($this->payment_proof);
+        } catch (\Throwable $exception) {
+            Log::warning('Payment proof URL could not be generated.', [
+                'order_id' => $this->id,
+                'exception' => $exception->getMessage(),
+            ]);
+
+            return null;
+        }
     }
 
     public function getStatusBadgeAttribute(): array
@@ -55,32 +66,32 @@ class Order extends Model
             'menunggu_verifikasi' => [
                 'label' => 'Menunggu Verifikasi',
                 'bg' => 'bg-amber-100 text-amber-800 border-amber-200',
-                'dot' => 'bg-amber-500'
+                'dot' => 'bg-amber-500',
             ],
             'diproses' => [
                 'label' => 'Sedang Diproses',
                 'bg' => 'bg-blue-100 text-blue-800 border-blue-200',
-                'dot' => 'bg-blue-500'
+                'dot' => 'bg-blue-500',
             ],
             'siap_diambil' => [
                 'label' => 'Siap Diambil (Pickup)',
                 'bg' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
-                'dot' => 'bg-emerald-500'
+                'dot' => 'bg-emerald-500',
             ],
             'selesai' => [
                 'label' => 'Pesanan Selesai',
                 'bg' => 'bg-gray-100 text-gray-800 border-gray-200',
-                'dot' => 'bg-gray-500'
+                'dot' => 'bg-gray-500',
             ],
             'dibatalkan' => [
                 'label' => 'Dibatalkan',
                 'bg' => 'bg-red-100 text-red-800 border-red-200',
-                'dot' => 'bg-red-500'
+                'dot' => 'bg-red-500',
             ],
             default => [
                 'label' => ucfirst($this->status),
                 'bg' => 'bg-gray-100 text-gray-800 border-gray-200',
-                'dot' => 'bg-gray-400'
+                'dot' => 'bg-gray-400',
             ],
         };
     }

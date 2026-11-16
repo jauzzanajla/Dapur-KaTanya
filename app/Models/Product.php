@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Support\Media;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Log;
 
 class Product extends Model
 {
@@ -47,10 +49,19 @@ class Product extends Model
                 return $primary->image_path;
             }
 
-            return \App\Support\Media::url($primary->image_path);
+            try {
+                return Media::url($primary->image_path) ?? asset('images/default-food.svg');
+            } catch (\Throwable $exception) {
+                Log::warning('Primary product image URL could not be generated.', [
+                    'product_id' => $this->id,
+                    'exception' => $exception->getMessage(),
+                ]);
+
+                return asset('images/default-food.svg');
+            }
         }
 
-        return asset('images/default-food.png');
+        return asset('images/default-food.svg');
     }
 
     public function getMarginAttribute(): float
