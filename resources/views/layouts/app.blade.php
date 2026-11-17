@@ -438,13 +438,13 @@
                                         </label>
                                         <select x-model="pickupTime" name="pickup_time"
                                                 class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white">
+                                            <option value="08:00">08:00 WIB (Pagi)</option>
+                                            <option value="09:30">09:30 WIB</option>
                                             <option value="11:00">11:00 WIB (Siang)</option>
                                             <option value="12:30">12:30 WIB (Makan Siang)</option>
                                             <option value="14:00">14:00 WIB</option>
                                             <option value="15:30">15:30 WIB (Sore)</option>
                                             <option value="17:00">17:00 WIB</option>
-                                            <option value="18:30">18:30 WIB (Malam)</option>
-                                            <option value="20:00">20:00 WIB</option>
                                         </select>
                                     </div>
 
