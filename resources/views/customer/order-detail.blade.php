@@ -32,18 +32,6 @@
                         Dibuat pada {{ $order->created_at->format('d M Y, H:i') }} WIB
                     </p>
                 </div>
-
-                <!-- WhatsApp Quick Chat Button -->
-                @php
-                    $waText = urlencode("Halo Admin Dapur KaTanya, saya *{$order->customer_name}* ingin mengonfirmasi pesanan *{$order->order_number}* sebesar *Rp " . number_format($order->total_omset, 0, ',', '.') . "*. Mohon segera diproses ya kak!");
-                @endphp
-                <a href="https://wa.me/6281382099669?text={{ $waText }}"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition active:scale-95">
-                    <i data-lucide="message-circle" class="w-4 h-4"></i>
-                    <span>Hubungi WhatsApp Outlet</span>
-                </a>
             </div>
 
             <!-- Details Grid -->
