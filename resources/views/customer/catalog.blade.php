@@ -182,8 +182,9 @@
                                 <div>
                                     <div class="flex items-center justify-between text-xs text-slate-400 font-semibold mb-1">
                                         <span class="capitalize">{{ $product->category }}</span>
-                                        <span class="text-emerald-600 flex items-center gap-1">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Tersedia
+                                        <span class="flex items-center gap-1 {{ $product->is_available ? 'text-emerald-600' : 'text-red-600' }}">
+                                            <span class="h-1.5 w-1.5 rounded-full {{ $product->is_available ? 'bg-emerald-500' : 'bg-red-500' }}"></span>
+                                            {{ $product->is_available ? 'Tersedia' : 'Habis' }}
                                         </span>
                                     </div>
                                     <h3 class="text-lg font-black text-slate-900 group-hover:text-red-600 transition-colors">
@@ -210,9 +211,9 @@
                                                 price: {{ $product->harga_jual }},
                                                 image: '{{ $product->primary_image_url }}'
                                             })"
-                                            class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-red-600/20 hover:shadow-lg transition active:scale-95 flex items-center gap-1.5">
-                                        <i data-lucide="plus" class="w-4 h-4"></i>
-                                        <span>Pesan</span>
+                                            @disabled(! $product->is_available) class="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold text-white shadow-md transition {{ $product->is_available ? 'bg-red-600 shadow-red-600/20 hover:bg-red-700 hover:shadow-lg active:scale-95' : 'cursor-not-allowed bg-slate-400' }}">
+                                        <i data-lucide="{{ $product->is_available ? 'plus' : 'ban' }}" class="w-4 h-4"></i>
+                                        <span>{{ $product->is_available ? 'Pesan' : 'Habis' }}</span>
                                     </button>
                                 </div>
                             </div>

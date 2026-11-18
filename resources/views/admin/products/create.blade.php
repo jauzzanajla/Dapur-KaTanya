@@ -96,13 +96,20 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1.5">
-                        Status Ketersediaan
+                        Visibilitas Katalog
                     </label>
                     <label class="flex items-center gap-3 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
                         <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}
                                class="rounded text-red-600 focus:ring-red-500 w-4 h-4">
-                        <span class="text-xs font-bold text-slate-700">Tampilkan menu di katalog pelanggan (Aktif)</span>
+                        <span class="text-xs font-bold text-slate-700">Tampilkan menu di katalog pelanggan</span>
                     </label>
+                    <div class="mt-3">
+                        <label for="is_available" class="mb-1.5 block text-xs font-bold text-slate-700">Ketersediaan Menu</label>
+                        <select id="is_available" name="is_available" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold focus:border-transparent focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            <option value="1" @selected(old('is_available', true))>Tersedia</option>
+                            <option value="0" @selected(! old('is_available', true))>Habis</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 

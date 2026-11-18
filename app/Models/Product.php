@@ -21,6 +21,7 @@ class Product extends Model
         'modal',
         'harga_jual',
         'is_active',
+        'is_available',
         'is_featured',
     ];
 
@@ -28,6 +29,7 @@ class Product extends Model
         'modal' => 'float',
         'harga_jual' => 'float',
         'is_active' => 'boolean',
+        'is_available' => 'boolean',
         'is_featured' => 'boolean',
     ];
 

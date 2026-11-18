@@ -45,6 +45,7 @@ class CustomerController extends Controller
         $products = $query->orderBy('id', 'asc')->get();
         $featuredProduct = Product::with('images')
             ->where('is_active', true)
+            ->where('is_available', true)
             ->where('is_featured', true)
             ->first();
         $pickupSchedules = $this->activePickupSchedules();
@@ -111,6 +112,16 @@ class CustomerController extends Controller
         $rawCart = json_decode($request->input('cart_items'), true);
         if (empty($rawCart) || ! is_array($rawCart)) {
             return back()->withErrors(['cart_items' => 'Keranjang belanja tidak boleh kosong.'])->withInput();
+        }
+
+        $cartProductIds = collect($rawCart)->pluck('id')->filter()->unique();
+        $unavailableProduct = Product::query()
+            ->whereIn('id', $cartProductIds)
+            ->where('is_available', false)
+            ->first();
+
+        if ($unavailableProduct) {
+            return back()->withErrors(['cart_items' => 'Menu '.$unavailableProduct->name.' sedang habis. Silakan hapus dari keranjang.'])->withInput();
         }
 
         $pickupLocation = $request->input('pickup_location') === 'Lainnya'

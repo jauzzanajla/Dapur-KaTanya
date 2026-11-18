@@ -72,6 +72,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // CRUD Products & Multi-images
         Route::resource('products', ProductController::class);
         Route::post('products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle');
+        Route::post('products/{product}/toggle-availability', [ProductController::class, 'toggleAvailability'])->name('products.availability.toggle');
         Route::delete('product-images/{image}', [ProductController::class, 'deleteImage'])->name('products.image.delete');
         Route::post('product-images/{image}/set-primary', [ProductController::class, 'setPrimaryImage'])->name('products.image.primary');
 

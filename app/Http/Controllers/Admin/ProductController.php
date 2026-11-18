@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductImage;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -108,6 +109,7 @@ class ProductController extends Controller
             'images' => 'required|array|min:1',
             'images.*' => 'file|mimes:jpeg,png,jpg,webp,svg|max:4096',
             'is_active' => 'nullable|boolean',
+            'is_available' => 'nullable|boolean',
             'is_featured' => 'nullable|boolean',
         ], [
             'name.unique' => 'Nama produk ini sudah digunakan.',
@@ -137,6 +139,7 @@ class ProductController extends Controller
                     'harga_jual' => $request->input('harga_jual'),
                     'description' => $request->input('description'),
                     'is_active' => $request->boolean('is_active', true),
+                    'is_available' => $request->boolean('is_available', true),
                     'is_featured' => $request->boolean('is_featured'),
                 ]);
 
@@ -195,6 +198,7 @@ class ProductController extends Controller
             'new_images' => 'nullable|array',
             'new_images.*' => 'file|mimes:jpeg,png,jpg,webp,svg|max:4096',
             'is_active' => 'nullable|boolean',
+            'is_available' => 'nullable|boolean',
             'is_featured' => 'nullable|boolean',
         ], [
             'new_images.*.uploaded' => 'Gambar gagal terkirim ke server. Kemungkinan ukurannya melebihi batas upload server.',
@@ -214,6 +218,7 @@ class ProductController extends Controller
                     'harga_jual' => $request->input('harga_jual'),
                     'description' => $request->input('description'),
                     'is_active' => $request->boolean('is_active'),
+                    'is_available' => $request->boolean('is_available', true),
                     'is_featured' => $request->boolean('is_featured'),
                 ]);
 
@@ -303,5 +308,13 @@ class ProductController extends Controller
         $statusStr = $product->is_active ? 'diaktifkan' : 'dinonaktifkan';
 
         return back()->with('success', "Status produk '{$product->name}' berhasil {$statusStr}.");
+    }
+
+    public function toggleAvailability(Product $product): RedirectResponse
+    {
+        $product->update(['is_available' => ! $product->is_available]);
+        $availability = $product->is_available ? 'tersedia' : 'habis';
+
+        return back()->with('success', "Ketersediaan menu '{$product->name}' diubah menjadi {$availability}.");
     }
 }

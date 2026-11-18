@@ -84,7 +84,7 @@
                         <th class="py-3.5 px-4">Modal (HPP)</th>
                         <th class="py-3.5 px-4">Harga Jual</th>
                         <th class="py-3.5 px-4">Margin Laba</th>
-                        <th class="py-3.5 px-4">Status</th>
+                        <th class="py-3.5 px-4">Katalog & Ketersediaan</th>
                         <th class="py-3.5 px-4 text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -155,9 +155,16 @@
                                 <form action="{{ route('admin.products.toggle', $product) }}" method="POST">
                                     @csrf
                                     <button type="submit"
-                                            title="Klik untuk toggle status"
+                                            title="Klik untuk mengubah visibilitas katalog"
                                             class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border transition {{ $product->is_active ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100' : 'bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200' }}">
-                                        {{ $product->is_active ? 'Aktif' : 'Nonaktif' }}
+                                        {{ $product->is_active ? 'Ditampilkan' : 'Disembunyikan' }}
+                                    </button>
+                                </form>
+                                <form action="{{ route('admin.products.availability.toggle', $product) }}" method="POST" class="mt-2">
+                                    @csrf
+                                    <button type="submit" title="Klik untuk mengubah ketersediaan"
+                                            class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border transition {{ $product->is_available ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100' : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100' }}">
+                                        {{ $product->is_available ? 'Tersedia' : 'Habis' }}
                                     </button>
                                 </form>
                             </td>
