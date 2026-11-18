@@ -36,8 +36,7 @@ class OrderController extends Controller
 
         $orders = $query->paginate(15);
 
-        $prepDate = $date ?: now()->toDateString();
-        $productionSummary = $productionRecap->summarizeForDate($prepDate);
+        $productionSummary = $productionRecap->summarizeActiveOrders();
 
         // Status counts for quick filter pills
         $counts = [
@@ -55,7 +54,6 @@ class OrderController extends Controller
             'search',
             'date',
             'counts',
-            'prepDate',
         ), $productionSummary));
     }
 

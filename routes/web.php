@@ -5,7 +5,6 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PickupScheduleController;
 use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\ProductionRecapController;
 use App\Http\Controllers\Admin\QrisController;
 use App\Http\Controllers\Admin\RawMaterialController;
 use App\Http\Controllers\Admin\SalesRecapController;
@@ -36,7 +35,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('qris', [QrisController::class, 'index'])->name('qris.index');
         Route::post('qris', [QrisController::class, 'store'])->name('qris.store');
-        Route::get('production-recap', [ProductionRecapController::class, 'index'])->name('production.index');
         Route::get('pickup-schedules', [PickupScheduleController::class, 'index'])->name('pickup-schedules.index');
         Route::post('pickup-schedules', [PickupScheduleController::class, 'store'])->name('pickup-schedules.store');
         Route::put('pickup-schedules/{pickupSchedule}', [PickupScheduleController::class, 'update'])->name('pickup-schedules.update');

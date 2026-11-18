@@ -16,11 +16,10 @@ class ProductionRecapService
      *     prepTotals: array{dimsum: int, cireng: int, es_teh: int, es_coklat: int, paket: int}
      * }
      */
-    public function summarizeForDate(string $date): array
+    public function summarizeActiveOrders(): array
     {
         $prepOrders = Order::with('items')
-            ->whereDate('created_at', $date)
-            ->where('status', '!=', 'dibatalkan')
+            ->whereIn('status', ['menunggu_verifikasi', 'diproses'])
             ->get();
         $menuTotals = [];
         $portionTotals = [
@@ -59,8 +58,8 @@ class ProductionRecapService
             }
         }
 
-        $prepTotals['dimsum'] = ($portionTotals['dimsum'] * 2) + $prepTotals['paket'];
-        $prepTotals['cireng'] = ($portionTotals['cireng'] * 5) + ($prepTotals['paket'] * 4);
+        $prepTotals['dimsum'] = ($portionTotals['dimsum'] * 2) + ($prepTotals['paket'] * 2);
+        $prepTotals['cireng'] = ($portionTotals['cireng'] * 5) + ($prepTotals['paket'] * 5);
         $prepTotals['es_teh'] = $portionTotals['es_teh'] + $prepTotals['paket'];
         $prepTotals['es_coklat'] = $portionTotals['es_coklat'];
 

@@ -105,7 +105,7 @@
                         Ringkasan Persiapan Menu
                     </h2>
                     <p class="text-xs text-slate-600 mt-1">
-                        Total pesanan masuk {{ \Carbon\Carbon::parse($prepDate)->format('d M Y') }} dari {{ $prepOrders->count() }} pesanan, tidak termasuk yang dibatalkan.
+                        {{ $prepOrders->count() }} pesanan aktif menunggu verifikasi atau sedang diproses. Pesanan siap diambil, selesai, dan dibatalkan tidak dihitung.
                     </p>
                 </div>
                 <span class="text-[11px] font-bold text-orange-800 bg-orange-100 px-3 py-1.5 rounded-full">
@@ -114,16 +114,21 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 p-5 sm:p-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-3 p-5 sm:p-6">
+            <div class="p-4 rounded-2xl bg-orange-50 border border-orange-100">
+                <p class="text-[10px] font-black text-orange-700 uppercase tracking-wider">Paket Cepat Lulus</p>
+                <p class="text-2xl font-black text-slate-900 mt-1">{{ $prepTotals['paket'] }} <span class="text-sm text-slate-500">paket</span></p>
+                <p class="text-[11px] text-slate-500 mt-1">1 porsi dimsum + 1 porsi cireng + 1 Es.T per paket</p>
+            </div>
             <div class="p-4 rounded-2xl bg-red-50 border border-red-100">
                 <p class="text-[10px] font-black text-red-700 uppercase tracking-wider">Dimsum yang disiapkan</p>
                 <p class="text-2xl font-black text-slate-900 mt-1">{{ $prepTotals['dimsum'] }} <span class="text-sm text-slate-500">pcs</span></p>
-                <p class="text-[11px] text-slate-500 mt-1">{{ $portionTotals['dimsum'] }} porsi &times; 2 pcs + {{ $prepTotals['paket'] }} paket &times; 1 pcs</p>
+                <p class="text-[11px] text-slate-500 mt-1">{{ $portionTotals['dimsum'] }} porsi &times; 2 pcs + {{ $prepTotals['paket'] }} paket &times; 2 pcs</p>
             </div>
             <div class="p-4 rounded-2xl bg-orange-50 border border-orange-100">
                 <p class="text-[10px] font-black text-orange-700 uppercase tracking-wider">Cireng yang disiapkan</p>
                 <p class="text-2xl font-black text-slate-900 mt-1">{{ $prepTotals['cireng'] }} <span class="text-sm text-slate-500">pcs</span></p>
-                <p class="text-[11px] text-slate-500 mt-1">{{ $portionTotals['cireng'] }} porsi &times; 5 pcs + {{ $prepTotals['paket'] }} paket &times; 4 pcs</p>
+                <p class="text-[11px] text-slate-500 mt-1">{{ $portionTotals['cireng'] }} porsi &times; 5 pcs + {{ $prepTotals['paket'] }} paket &times; 5 pcs</p>
             </div>
             <div class="p-4 rounded-2xl bg-amber-50 border border-amber-100">
                 <p class="text-[10px] font-black text-amber-700 uppercase tracking-wider">Es Teh (Es.T) disiapkan</p>
@@ -138,7 +143,7 @@
         </div>
 
         <div class="px-5 sm:px-6 pb-5 sm:pb-6">
-            <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-2">Jumlah porsi menu dari pesanan yang masuk tanggal tersebut</h3>
+            <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-2">Jumlah porsi menu dari seluruh pesanan aktif</h3>
             @if(count($menuTotals))
                 <div class="flex flex-wrap gap-2">
                     @foreach($menuTotals as $menuName => $quantity)
@@ -149,7 +154,7 @@
                     @endforeach
                 </div>
             @else
-                <p class="text-xs text-slate-400">Belum ada pesanan untuk tanggal ini.</p>
+                <p class="text-xs text-slate-400">Belum ada pesanan aktif yang perlu disiapkan.</p>
             @endif
         </div>
     </section>
