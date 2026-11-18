@@ -4,7 +4,7 @@
 @section('page_title', 'Kelola Pesanan Masuk & Verifikasi Pembayaran')
 
 @section('content')
-<div class="space-y-6" x-data="{ proofModal: { open: false, url: '', orderNo: '' } }">
+<div class="space-y-6">
 
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -168,9 +168,9 @@
                         <th class="py-3.5 px-4">No. Pesanan</th>
                         <th class="py-3.5 px-4">Nama Pembeli & HP (WA)</th>
                         <th class="py-3.5 px-4">Jadwal Pickup</th>
+                        <th class="py-3.5 px-4">Lokasi Pengambilan</th>
                         <th class="py-3.5 px-4">Menu Dipesan</th>
                         <th class="py-3.5 px-4">Total Omset</th>
-                        <th class="py-3.5 px-4">Bukti QRIS</th>
                         <th class="py-3.5 px-4">Ubah Status</th>
                         <th class="py-3.5 px-4 text-right">Aksi</th>
                     </tr>
@@ -212,8 +212,12 @@
                             <td class="py-4 px-4">
                                 <div class="font-bold text-slate-800">{{ $order->pickup_date->format('d/m/Y') }}</div>
                                 <div class="text-[11px] text-slate-500 font-medium">Jam {{ $order->pickup_time ?: '-' }} WIB</div>
-                                <div class="text-[10px] text-orange-600 font-semibold mt-0.5 line-clamp-1 max-w-[180px]" title="{{ $order->pickup_location }}">
-                                    📍 {{ $order->pickup_location ?? 'Outlet Utama - Kampus Pusat' }}
+                            </td>
+
+                            <!-- Pickup Location -->
+                            <td class="py-4 px-4">
+                                <div class="text-[11px] text-orange-600 font-semibold line-clamp-2 max-w-[180px]" title="{{ $order->pickup_location }}">
+                                    Lokasi: {{ $order->pickup_location ?? 'Outlet Utama - Kampus Pusat' }}
                                 </div>
                             </td>
 
@@ -231,20 +235,6 @@
                             <!-- Total Omset -->
                             <td class="py-4 px-4 font-black text-slate-900 text-sm">
                                 Rp {{ number_format($order->total_omset, 0, ',', '.') }}
-                            </td>
-
-                            <!-- Payment Proof Preview -->
-                            <td class="py-4 px-4">
-                                @if($order->payment_proof)
-                                    <button type="button"
-                                            @click="proofModal.open = true; proofModal.url = '{{ $order->payment_proof_url }}'; proofModal.orderNo = '{{ $order->order_number }}'"
-                                            class="flex items-center gap-1.5 px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-[11px] font-bold border border-red-200 transition">
-                                        <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-                                        <span>Cek Bukti</span>
-                                    </button>
-                                @else
-                                    <span class="text-slate-400 text-[11px]">-</span>
-                                @endif
                             </td>
 
                             <!-- Status Dropdown Form -->
@@ -302,47 +292,6 @@
                 {{ $orders->links() }}
             </div>
         @endif
-    </div>
-
-    <!-- Modal Bukti Transfer QRIS -->
-    <div x-cloak
-         x-show="proofModal.open"
-         @keydown.escape.window="proofModal.open = false"
-         class="fixed inset-0 z-50 overflow-y-auto"
-         role="dialog"
-         aria-modal="true">
-
-        <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md" @click="proofModal.open = false"></div>
-
-        <div class="flex items-center justify-center min-h-screen p-4 text-center">
-            <div class="relative bg-white rounded-3xl max-w-lg w-full p-6 text-left shadow-2xl overflow-hidden border border-slate-100 space-y-4">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <div>
-                        <h3 class="text-base font-black text-slate-900">Bukti Pembayaran QRIS</h3>
-                        <p class="text-xs text-slate-500 font-mono" x-text="'Pesanan: ' + proofModal.orderNo"></p>
-                    </div>
-                    <button @click="proofModal.open = false" class="text-slate-400 hover:text-slate-600 p-1">
-                        <i data-lucide="x" class="w-5 h-5"></i>
-                    </button>
-                </div>
-
-                <div class="bg-slate-50 rounded-2xl p-2 border border-slate-200 flex items-center justify-center max-h-[70vh] overflow-auto">
-                    <img :src="proofModal.url" alt="Bukti Transfer" class="max-w-full max-h-[65vh] object-contain rounded-xl">
-                </div>
-
-                <div class="flex items-center justify-between pt-2">
-                    <a :href="proofModal.url" target="_blank"
-                       class="text-xs font-bold text-red-600 hover:underline flex items-center gap-1">
-                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                        <span>Buka Tab Baru</span>
-                    </a>
-                    <button type="button" @click="proofModal.open = false"
-                            class="px-4 py-2 bg-slate-800 text-white font-bold text-xs rounded-xl hover:bg-slate-700">
-                        Tutup
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 
 </div>
