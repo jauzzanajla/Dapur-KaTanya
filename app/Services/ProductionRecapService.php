@@ -58,8 +58,8 @@ class ProductionRecapService
             }
         }
 
-        $prepTotals['dimsum'] = ($portionTotals['dimsum'] * 2) + ($prepTotals['paket'] * 2);
-        $prepTotals['cireng'] = ($portionTotals['cireng'] * 5) + ($prepTotals['paket'] * 5);
+        $prepTotals['dimsum'] = ($portionTotals['dimsum'] * 2) + $prepTotals['paket'];
+        $prepTotals['cireng'] = ($portionTotals['cireng'] * 5) + ($prepTotals['paket'] * 4);
         $prepTotals['es_teh'] = $portionTotals['es_teh'] + $prepTotals['paket'];
         $prepTotals['es_coklat'] = $portionTotals['es_coklat'];
 

@@ -118,17 +118,17 @@
             <div class="p-4 rounded-2xl bg-orange-50 border border-orange-100">
                 <p class="text-[10px] font-black text-orange-700 uppercase tracking-wider">Paket Cepat Lulus</p>
                 <p class="text-2xl font-black text-slate-900 mt-1">{{ $prepTotals['paket'] }} <span class="text-sm text-slate-500">paket</span></p>
-                <p class="text-[11px] text-slate-500 mt-1">1 porsi dimsum + 1 porsi cireng + 1 Es.T per paket</p>
+                <p class="text-[11px] text-slate-500 mt-1">1 pcs dimsum + 4 pcs cireng + 1 Es.T per paket</p>
             </div>
             <div class="p-4 rounded-2xl bg-red-50 border border-red-100">
                 <p class="text-[10px] font-black text-red-700 uppercase tracking-wider">Dimsum yang disiapkan</p>
                 <p class="text-2xl font-black text-slate-900 mt-1">{{ $prepTotals['dimsum'] }} <span class="text-sm text-slate-500">pcs</span></p>
-                <p class="text-[11px] text-slate-500 mt-1">{{ $portionTotals['dimsum'] }} porsi &times; 2 pcs + {{ $prepTotals['paket'] }} paket &times; 2 pcs</p>
+                <p class="text-[11px] text-slate-500 mt-1">{{ $portionTotals['dimsum'] }} porsi &times; 2 pcs + {{ $prepTotals['paket'] }} paket &times; 1 pcs</p>
             </div>
             <div class="p-4 rounded-2xl bg-orange-50 border border-orange-100">
                 <p class="text-[10px] font-black text-orange-700 uppercase tracking-wider">Cireng yang disiapkan</p>
                 <p class="text-2xl font-black text-slate-900 mt-1">{{ $prepTotals['cireng'] }} <span class="text-sm text-slate-500">pcs</span></p>
-                <p class="text-[11px] text-slate-500 mt-1">{{ $portionTotals['cireng'] }} porsi &times; 5 pcs + {{ $prepTotals['paket'] }} paket &times; 5 pcs</p>
+                <p class="text-[11px] text-slate-500 mt-1">{{ $portionTotals['cireng'] }} porsi &times; 5 pcs + {{ $prepTotals['paket'] }} paket &times; 4 pcs</p>
             </div>
             <div class="p-4 rounded-2xl bg-amber-50 border border-amber-100">
                 <p class="text-[10px] font-black text-amber-700 uppercase tracking-wider">Es Teh (Es.T) disiapkan</p>
