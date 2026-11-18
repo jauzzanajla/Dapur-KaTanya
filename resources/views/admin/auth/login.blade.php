@@ -72,7 +72,7 @@
                         <input type="checkbox" name="remember" checked class="rounded text-red-600 focus:ring-red-500">
                         <span>Ingat saya</span>
                     </label>
-                    <span class="text-orange-600 font-semibold text-[11px]">Database: PostgreSQL 18</span>
+                
                 </div>
 
                 <!-- Submit Button (Red Primary) -->

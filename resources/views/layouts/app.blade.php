@@ -76,10 +76,7 @@
                         <span class="text-2xl font-black tracking-tight text-slate-900 group-hover:text-red-600 transition-colors">
                             Dapur <span class="text-red-600">KaTanya</span>
                         </span>
-                        <p class="text-xs font-medium text-orange-600 flex items-center gap-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
-                            Dimsum & Cireng Kuah Keju
-                        </p>
+                        
                     </div>
                 </a>
 
@@ -208,10 +205,10 @@
                         </p>
                     </div>
                     <div class="pt-2">
-                        <a href="https://wa.me/6281382099669" target="_blank" rel="noopener noreferrer"
+                        <a href="https://wa.me/6281337649923" target="_blank" rel="noopener noreferrer"
                            class="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300 transition-colors">
                             <i data-lucide="phone" class="w-4 h-4"></i>
-                            WhatsApp CS: +62 813-8209-9669
+                            WhatsApp CS: +62 813-3764-9923
                         </a>
                     </div>
                 </div>
@@ -361,7 +358,8 @@
                                     <!-- Customer Name -->
                                     <div>
                                         <label class="block text-xs font-bold text-slate-700 mb-1">
-                                            Nama Pemesan <span class="text-red-500">*</span>
+                                            Nama Pemesan 
+                                            (Utamakan menggunakan yang mudah dikenali / nama asli) <span class="text-red-500">*</span>
                                         </label>
                                         <input type="text"
                                                x-model="customerName"
@@ -438,13 +436,11 @@
                                         </label>
                                         <select x-model="pickupTime" name="pickup_time"
                                                 class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white">
-                                            <option value="08:00">08:00 WIB (Pagi)</option>
-                                            <option value="09:30">09:30 WIB</option>
-                                            <option value="11:00">11:00 WIB (Siang)</option>
-                                            <option value="12:30">12:30 WIB (Makan Siang)</option>
+                                            <option value="13:00">13:00 WIB </option>
                                             <option value="14:00">14:00 WIB</option>
-                                            <option value="15:30">15:30 WIB (Sore)</option>
-                                            <option value="17:00">17:00 WIB</option>
+                                            <option value="15:00">15:00 WIB </option>
+                                            <option value="15:30">15:30 WIB</option>
+
                                         </select>
                                     </div>
 
@@ -662,7 +658,7 @@
                 customerName: '',
                 customerPhone: '',
                 pickupDate: @js(old('pickup_date', '')),
-                pickupTime: '12:30',
+                pickupTime: '15:00',
                 pickupLocation: 'Kampus B',
                 otherPickupLocation: '',
                 orderNotes: '',

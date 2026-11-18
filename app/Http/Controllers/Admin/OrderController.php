@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Services\ProductionRecapService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -75,5 +76,14 @@ class OrderController extends Controller
         $order->update(['status' => $request->input('status')]);
 
         return back()->with('success', "Status pesanan {$order->order_number} berhasil diubah dari '{$oldStatus}' menjadi '{$order->status}'.");
+    }
+
+    public function destroy(Order $order): RedirectResponse
+    {
+        $orderNumber = $order->order_number;
+        $order->delete();
+
+        return redirect()->route('admin.orders.index')
+            ->with('success', "Pesanan {$orderNumber} berhasil dihapus.");
     }
 }

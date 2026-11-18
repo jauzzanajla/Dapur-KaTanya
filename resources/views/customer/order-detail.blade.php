@@ -3,6 +3,22 @@
 @section('title', 'Detail Pesanan ' . $order->order_number)
 
 @section('content')
+@php
+    $orderItemsMessage = $order->items
+        ->map(fn ($item) => "- {$item->product_name} x{$item->quantity}")
+        ->implode("\n");
+    $totalMenuQuantity = $order->items->sum('quantity');
+    $whatsappMessage = implode("\n", [
+        'Halo Dapur KaTanya, saya ingin konfirmasi pesanan:',
+        'Kode Pesanan: '.$order->order_number,
+        'Nama Pembeli: '.$order->customer_name,
+        'Nama Menu:',
+        $orderItemsMessage,
+        'Total Menu: '.$totalMenuQuantity,
+        'Jumlah Harga: Rp '.number_format($order->total_omset, 0, ',', '.'),
+    ]);
+    $whatsappUrl = 'https://wa.me/6281337649923?text='.urlencode($whatsappMessage);
+@endphp
 <div class="py-12 bg-slate-50 min-h-[80vh]"
      x-data="{
         init() {
@@ -130,6 +146,11 @@
                    class="text-xs font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 transition">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>Kembali ke Katalog Menu</span>
+                </a>
+                <a href="{{ $whatsappUrl }}" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-xs font-bold text-white transition hover:bg-emerald-700">
+                    <i data-lucide="message-circle" class="h-4 w-4"></i>
+                    Konfirmasi via WhatsApp
                 </a>
                 <a href="{{ route('order.track', ['q' => $order->customer_phone]) }}"
                    class="text-xs font-bold text-orange-600 hover:underline">

@@ -265,10 +265,20 @@
 
                             <!-- Detail Action -->
                             <td class="py-4 px-4 text-right">
-                                <a href="{{ route('admin.orders.show', $order) }}"
-                                   class="text-xs font-bold text-slate-600 hover:text-red-600 bg-slate-50 hover:bg-red-50 px-2.5 py-1.5 rounded-xl border border-slate-200 transition">
-                                    Rincian
-                                </a>
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="{{ route('admin.orders.show', $order) }}"
+                                       class="text-xs font-bold text-slate-600 hover:text-red-600 bg-slate-50 hover:bg-red-50 px-2.5 py-1.5 rounded-xl border border-slate-200 transition">
+                                        Rincian
+                                    </a>
+                                    <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" onsubmit="return confirm('Hapus pesanan {{ $order->order_number }}? Data ini tidak dapat dikembalikan.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="inline-flex items-center gap-1 rounded-xl border border-red-200 bg-red-50 px-2.5 py-1.5 text-xs font-bold text-red-700 transition hover:bg-red-100">
+                                            <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
