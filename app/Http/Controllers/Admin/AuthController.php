@@ -3,33 +3,33 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function showLoginForm()
+    public function showLoginForm(): View|RedirectResponse
     {
         if (Auth::check() && Auth::user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
+
         return view('admin.auth.login');
     }
 
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
         ]);
+
+        $credentials['role'] = 'admin';
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-
-            if (Auth::user()->role !== 'admin') {
-                Auth::logout();
-                return back()->withErrors(['email' => 'Akun Anda bukan akun administrator.']);
-            }
 
             return redirect()->route('admin.dashboard')->with('success', 'Selamat datang kembali, Admin Dapur KaTanya!');
         }
@@ -39,7 +39,7 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
         $request->session()->invalidate();

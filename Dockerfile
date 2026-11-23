@@ -37,7 +37,9 @@ ENV PORT=80 \
     APP_DEBUG=false \
     LOG_CHANNEL=stderr \
     CACHE_STORE=array \
+    CACHE_LIMITER=database \
     SESSION_DRIVER=cookie \
+    SESSION_SECURE_COOKIE=true \
     QUEUE_CONNECTION=sync
 USER www-data
 CMD ["frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile"]

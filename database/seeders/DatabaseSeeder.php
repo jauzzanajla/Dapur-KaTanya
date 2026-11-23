@@ -2,17 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Product;
-use App\Models\ProductImage;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\RawMaterialPurchase;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\File;
 
 class DatabaseSeeder extends Seeder
 {
@@ -31,7 +29,7 @@ class DatabaseSeeder extends Seeder
         File::ensureDirectoryExists($proofDir);
 
         // Helper function to write SVG image
-        $createSvg = function(string $path, string $title, string $subtitle, string $bgColor1, string $bgColor2, string $accentColor, string $iconSvg) {
+        $createSvg = function (string $path, string $title, string $subtitle, string $bgColor1, string $bgColor2, string $accentColor, string $iconSvg) {
             $svg = <<<SVG
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
   <defs>
@@ -100,23 +98,23 @@ SVG;
         $bundlingIcon2 = '<polygon points="0,-45 42,35 -42,35" fill="#DC2626" opacity="0.9"/><circle cx="0" cy="-5" r="16" fill="#FEF08A"/><text x="0" y="24" font-family="sans-serif" font-size="14" font-weight="900" fill="#FFF" text-anchor="middle">LULUS</text>';
 
         // Generate SVGs for products
-        $createSvg($productsDir . '/dimsum-1.svg', 'Dimsum Kuah Keju', 'Porsi Spesial Gurih & Creamy', '#FFFBEB', '#FEF3C7', '#DC2626', $dimsumIcon);
-        $createSvg($productsDir . '/dimsum-2.svg', 'Dimsum Kuah Keju', 'Tampak Atas & Extra Keju Lumer', '#FEF2F2', '#FEE2E2', '#EA580C', $dimsumIcon2);
+        $createSvg($productsDir.'/dimsum-1.svg', 'Dimsum Kuah Keju', 'Porsi Spesial Gurih & Creamy', '#FFFBEB', '#FEF3C7', '#DC2626', $dimsumIcon);
+        $createSvg($productsDir.'/dimsum-2.svg', 'Dimsum Kuah Keju', 'Tampak Atas & Extra Keju Lumer', '#FEF2F2', '#FEE2E2', '#EA580C', $dimsumIcon2);
 
-        $createSvg($productsDir . '/cireng-1.svg', 'Cireng Kuah Keju', 'Kenyal Krispi Disiram Kuah Keju', '#FFF7ED', '#FFEDD5', '#EA580C', $cirengIcon);
-        $createSvg($productsDir . '/cireng-2.svg', 'Cireng Kuah Keju', 'Crispy Golden Brown & Chili Cheese', '#FFFBEB', '#FEF3C7', '#DC2626', $cirengIcon2);
+        $createSvg($productsDir.'/cireng-1.svg', 'Cireng Kuah Keju', 'Kenyal Krispi Disiram Kuah Keju', '#FFF7ED', '#FFEDD5', '#EA580C', $cirengIcon);
+        $createSvg($productsDir.'/cireng-2.svg', 'Cireng Kuah Keju', 'Crispy Golden Brown & Chili Cheese', '#FFFBEB', '#FEF3C7', '#DC2626', $cirengIcon2);
 
-        $createSvg($productsDir . '/esteh-1.svg', 'Es.T (Esteh)', 'Teh Segar Melati Manis Pas', '#ECFDF5', '#D1FAE5', '#059669', $teaIcon);
-        $createSvg($productsDir . '/esteh-2.svg', 'Es.T (Esteh)', 'Segar Dingin Pelepas Dahaga', '#FEF3C7', '#FDE68A', '#EA580C', $teaIcon2);
+        $createSvg($productsDir.'/esteh-1.svg', 'Es.T (Esteh)', 'Teh Segar Melati Manis Pas', '#ECFDF5', '#D1FAE5', '#059669', $teaIcon);
+        $createSvg($productsDir.'/esteh-2.svg', 'Es.T (Esteh)', 'Segar Dingin Pelepas Dahaga', '#FEF3C7', '#FDE68A', '#EA580C', $teaIcon2);
 
-        $createSvg($productsDir . '/skom-1.svg', 'S.Kom (Es Coklat)', 'Es Coklat Kental Mood Booster', '#FEF2F2', '#FEE2E2', '#78350F', $chocoIcon);
-        $createSvg($productsDir . '/skom-2.svg', 'S.Kom (Es Coklat)', 'Racikan Coklat Premium Legit', '#FFF7ED', '#FFEDD5', '#DC2626', $chocoIcon2);
+        $createSvg($productsDir.'/skom-1.svg', 'S.Kom (Es Coklat)', 'Es Coklat Kental Mood Booster', '#FEF2F2', '#FEE2E2', '#78350F', $chocoIcon);
+        $createSvg($productsDir.'/skom-2.svg', 'S.Kom (Es Coklat)', 'Racikan Coklat Premium Legit', '#FFF7ED', '#FFEDD5', '#DC2626', $chocoIcon2);
 
-        $createSvg($productsDir . '/bundling-1.svg', 'Paket Cepat Lulus', 'Dimsum + Cireng + Minuman Pilihan', '#FEF2F2', '#FFFBEB', '#DC2626', $bundlingIcon);
-        $createSvg($productsDir . '/bundling-2.svg', 'Paket Cepat Lulus', 'Paling Hemat & Puas Buat Nugas', '#FFF7ED', '#FEF2F2', '#EA580C', $bundlingIcon2);
+        $createSvg($productsDir.'/bundling-1.svg', 'Paket Cepat Lulus', 'Dimsum + Cireng + Minuman Pilihan', '#FEF2F2', '#FFFBEB', '#DC2626', $bundlingIcon);
+        $createSvg($productsDir.'/bundling-2.svg', 'Paket Cepat Lulus', 'Paling Hemat & Puas Buat Nugas', '#FFF7ED', '#FEF2F2', '#EA580C', $bundlingIcon2);
 
         // Generate QRIS Official Image
-        $qrisSvg = <<<SVG
+        $qrisSvg = <<<'SVG'
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700" width="100%" height="100%">
   <defs>
     <filter id="qris-shadow" x="-10%" y="-10%" width="120%" height="120%">
@@ -230,10 +228,10 @@ SVG;
   <text x="250" y="655" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600" fill="#DC2626" text-anchor="middle">Scan dengan aplikasi mobile banking / e-wallet apapun</text>
 </svg>
 SVG;
-        file_put_contents($qrisDir . '/qris-dapur-katanya.svg', $qrisSvg);
+        file_put_contents($qrisDir.'/qris-dapur-katanya.svg', $qrisSvg);
 
         // Also create a sample payment proof for seeded orders
-        $sampleProofSvg = <<<SVG
+        $sampleProofSvg = <<<'SVG'
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 550" width="100%" height="100%">
   <rect width="400" height="550" fill="#F8FAFC" rx="16"/>
   <rect x="30" y="30" width="340" height="490" fill="#FFFFFF" rx="12" stroke="#E2E8F0"/>
@@ -252,18 +250,22 @@ SVG;
   <text x="200" y="375" font-family="sans-serif" font-size="13" font-weight="bold" fill="#059669" text-anchor="middle">TRANSAKSI BERHASIL</text>
 </svg>
 SVG;
-        file_put_contents($proofDir . '/sample-proof.svg', $sampleProofSvg);
+        file_put_contents($proofDir.'/sample-proof.svg', $sampleProofSvg);
 
         // 2. Seed Admin User
-        User::updateOrCreate(
-            ['email' => 'admin@dapurkatanya.com'],
-            [
-                'name' => 'Admin Dapur KaTanya',
-                'password' => Hash::make('admin123'),
-                'role' => 'admin',
-            ]
-        );
+        $adminEmail = config('services.admin.email');
+        $adminPassword = config('services.admin.password');
 
+        if (filled($adminEmail) && filled($adminPassword)) {
+            User::updateOrCreate(
+                ['email' => $adminEmail],
+                [
+                    'name' => 'Admin Dapur KaTanya',
+                    'password' => $adminPassword,
+                    'role' => 'admin',
+                ]
+            );
+        }
         // 3. Seed Initial 5 Products with multi-image
         $productsData = [
             [
@@ -379,7 +381,7 @@ SVG;
         // 5. Seed Initial Orders (representing realistic sales over the past few days)
         $sampleOrders = [
             [
-                'order_number' => 'DKT-' . Carbon::today()->subDays(4)->format('Ymd') . '-001',
+                'order_number' => 'DKT-'.Carbon::today()->subDays(4)->format('Ymd').'-001',
                 'customer_name' => 'Anisa Rahmawati',
                 'customer_phone' => '081234567890',
                 'pickup_date' => Carbon::today()->subDays(4)->toDateString(),
@@ -394,7 +396,7 @@ SVG;
                 ],
             ],
             [
-                'order_number' => 'DKT-' . Carbon::today()->subDays(3)->format('Ymd') . '-002',
+                'order_number' => 'DKT-'.Carbon::today()->subDays(3)->format('Ymd').'-002',
                 'customer_name' => 'Bima Satria',
                 'customer_phone' => '082198765432',
                 'pickup_date' => Carbon::today()->subDays(3)->toDateString(),
@@ -409,7 +411,7 @@ SVG;
                 ],
             ],
             [
-                'order_number' => 'DKT-' . Carbon::today()->subDays(2)->format('Ymd') . '-003',
+                'order_number' => 'DKT-'.Carbon::today()->subDays(2)->format('Ymd').'-003',
                 'customer_name' => 'Cindy Natalia',
                 'customer_phone' => '085712348899',
                 'pickup_date' => Carbon::today()->subDays(2)->toDateString(),
@@ -424,7 +426,7 @@ SVG;
                 ],
             ],
             [
-                'order_number' => 'DKT-' . Carbon::today()->subDays(1)->format('Ymd') . '-004',
+                'order_number' => 'DKT-'.Carbon::today()->subDays(1)->format('Ymd').'-004',
                 'customer_name' => 'Dwi Prasetyo',
                 'customer_phone' => '087855443322',
                 'pickup_date' => Carbon::today()->subDays(1)->toDateString(),
@@ -440,7 +442,7 @@ SVG;
                 ],
             ],
             [
-                'order_number' => 'DKT-' . Carbon::today()->format('Ymd') . '-005',
+                'order_number' => 'DKT-'.Carbon::today()->format('Ymd').'-005',
                 'customer_name' => 'Eka Wahyuni',
                 'customer_phone' => '089912345678',
                 'pickup_date' => Carbon::today()->toDateString(),
@@ -454,7 +456,7 @@ SVG;
                 ],
             ],
             [
-                'order_number' => 'DKT-' . Carbon::today()->format('Ymd') . '-006',
+                'order_number' => 'DKT-'.Carbon::today()->format('Ymd').'-006',
                 'customer_name' => 'Fajar Pratama',
                 'customer_phone' => '081399887766',
                 'pickup_date' => Carbon::today()->addDay()->toDateString(),

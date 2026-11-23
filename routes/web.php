@@ -10,7 +10,6 @@ use App\Http\Controllers\Admin\RawMaterialController;
 use App\Http\Controllers\Admin\SalesRecapController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,9 +24,9 @@ Route::get('/order/{order_number}', [CustomerController::class, 'showOrder'])->n
 Route::get('/lacak-pesanan', [CustomerController::class, 'trackOrder'])->name('order.track');
 
 // Admin Auth
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('dapurcantik')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:admin-login')->name('login.submit');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Admin Protected Area
@@ -39,33 +38,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('pickup-schedules', [PickupScheduleController::class, 'store'])->name('pickup-schedules.store');
         Route::put('pickup-schedules/{pickupSchedule}', [PickupScheduleController::class, 'update'])->name('pickup-schedules.update');
         Route::delete('pickup-schedules/{pickupSchedule}', [PickupScheduleController::class, 'destroy'])->name('pickup-schedules.destroy');
-
-        // SEMENTARA: cek konfigurasi storage di server. Hapus setelah masalah upload selesai.
-        Route::get('cek-storage', function () {
-            $disk = config('filesystems.media_disk', 'public');
-
-            try {
-                Storage::disk($disk)->put('tes-vercel.txt', 'halo '.now());
-                $tesTulis = 'BERHASIL';
-            } catch (Throwable $e) {
-                $prev = $e->getPrevious();
-                $tesTulis = 'GAGAL: '.$e->getMessage()
-                    .($prev ? ' — '.get_class($prev).': '.$prev->getMessage() : '');
-            }
-
-            return [
-                'driver_public' => config('filesystems.disks.public.driver'),
-                'media_disk' => $disk,
-                'driver_media' => config("filesystems.disks.{$disk}.driver"),
-                'bucket_ada' => filled(config('filesystems.disks.s3.bucket')),
-                'key_ada' => filled(config('filesystems.disks.s3.key')),
-                'secret_ada' => filled(config('filesystems.disks.s3.secret')),
-                'endpoint' => config('filesystems.disks.s3.endpoint'),
-                'region' => config('filesystems.disks.s3.region'),
-                'url' => config('filesystems.disks.s3.url'),
-                'tes_tulis' => $tesTulis,
-            ];
-        })->name('cek-storage');
 
         // CRUD Products & Multi-images
         Route::resource('products', ProductController::class);

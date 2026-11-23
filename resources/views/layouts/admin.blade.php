@@ -199,10 +199,7 @@
             </div>
 
             <div class="flex items-center gap-3">
-                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-orange-50 border border-orange-200 text-orange-700 rounded-xl text-xs font-semibold">
-                    <i data-lucide="database" class="w-3.5 h-3.5 text-orange-500"></i>
-                    <span>PostgreSQL Online</span>
-                </div>
+
                 <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold">
                     <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-500"></i>
                     <span>{{ date('d M Y') }}</span>
